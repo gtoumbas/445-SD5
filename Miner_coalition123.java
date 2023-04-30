@@ -12,27 +12,25 @@ public class Miner_coalition123 implements Miner {
         BlockChain desiredChain = blocks[0];
         Boolean foundCoalition = false;
         int maxRank = 0;
-        int earliest = Integer.MAX_VALUE;
+        // int earliest = Integer.MAX_VALUE;
 
         for (BlockChain block : blocks) {
-            boolean shouldUpdate = (block.getBribeAmount() == SIGNAL_BRIBE) &&
-                    ((block.getRank() > maxRank) || (block.getRank() == maxRank && block.getRoundCreated() < earliest));
+            boolean shouldUpdate = (block.getBribeAmount() == SIGNAL_BRIBE && block.getRank() > maxRank);
+            // || (block.getRank() == maxRank && block.getRoundCreated() < earliest);
 
             if (shouldUpdate) {
+                // System.out.println("Found coalition");
                 foundCoalition = true;
                 maxRank = block.getRank();
-                earliest = block.getRoundCreated();
+                // earliest = block.getRoundCreated();
                 desiredChain = block;
-                
-                
             }
         }
         
-        return desiredChain;
-        // if (foundCoalition){
-        //     return desiredChain;
-        // }
-        // return blocks[0];
+        if (foundCoalition){
+            return desiredChain;
+        }
+        return blocks[0];
 
     }
 
@@ -66,7 +64,7 @@ public class Miner_coalition123 implements Miner {
         if (roundsLeft == 2 && !isSignalSent(highestBlock)) {
             return SIGNAL_SPEND;
         } else if (isSignalSent(highestBlock)) {
-            return highestBlock.getStakeForMiner(miningIndex) * 0.40;
+            return highestBlock.getStakeForMiner(miningIndex) * 0.35;
         } else {
             return 0.0;
         }
