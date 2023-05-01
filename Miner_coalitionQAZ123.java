@@ -8,6 +8,26 @@ public class Miner_coalitionQAZ123 implements Miner {
     private static final double SIGNAL_SPEND = 0.000445;
     private static final double SIGNAL_BRIBE = 0.002023;
 
+    private BlockChain getLongestChain() {
+        BlockChain longestChain = blocks[0];
+        int maxRank = 0;
+        int earliest = Integer.MAX_VALUE;
+
+        for (BlockChain block : blocks) {
+          boolean shouldUpdate =
+              (block.getRank() > maxRank)
+                  || (block.getRank() == maxRank && block.getRoundCreated() < earliest);
+
+          if (shouldUpdate) {
+            maxRank = block.getRank();
+            earliest = block.getRoundCreated();
+            longestChain = block;
+          }
+        }
+
+        return longestChain;
+      }
+
     private BlockChain getHighestRankChainWithBribe() {
         BlockChain desiredChain = blocks[0];
         Boolean foundCoalition = false;
@@ -35,8 +55,8 @@ public class Miner_coalitionQAZ123 implements Miner {
     }
 
     private boolean isSignalSent(BlockChain block) {
-        if (block.getBribeAmount() == SIGNAL_BRIBE) {
-            return true;
+        if (block.getBribeAmount() != SIGNAL_BRIBE) {
+            return false;
         }
 
         for (double spend : block.getSpends()) {
@@ -59,7 +79,7 @@ public class Miner_coalitionQAZ123 implements Miner {
     }
 
     public double getAmountToSpend() {
-        BlockChain highestBlock = getHighestRankChainWithBribe();
+        BlockChain highestBlock = getLongestChain();
 
         if (roundsLeft == 2 && !isSignalSent(highestBlock)) {
             return SIGNAL_SPEND;
@@ -71,7 +91,7 @@ public class Miner_coalitionQAZ123 implements Miner {
     }
 
     public double getAmountToBribe() {
-        BlockChain highestBlock = getHighestRankChainWithBribe();
+        BlockChain highestBlock = getLongestChain();
 
         if (isSignalSent(highestBlock)) {
             return 0.0;
