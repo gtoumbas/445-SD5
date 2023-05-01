@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class Miner_coalitionQAZ123 implements Miner {
+public class Miner_coalitionQAZ1234 implements Miner {
     BlockChain[] blocks;
     int roundsLeft;
     int miningIndex;
@@ -76,7 +76,7 @@ public class Miner_coalitionQAZ123 implements Miner {
     }
 
     public BlockChain getBlockToMine() {
-        return getHighestRankChainWithBribe();
+        return getLongestChain();// getHighestRankChainWithBribe();
     }
 
     public double getAmountToSpend() {
@@ -85,7 +85,7 @@ public class Miner_coalitionQAZ123 implements Miner {
         if (roundsLeft == 2 && !isSignalSent(highestBlock)) {
             return SIGNAL_SPEND;
         } else if (isSignalSent(highestBlock)) {
-            return highestBlock.getStakeForMiner(miningIndex) * 0.35;
+            return highestBlock.getStakeForMiner(miningIndex) * 0.5;
         } else {
             return 0.0;
         }
