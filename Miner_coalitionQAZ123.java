@@ -4,6 +4,7 @@ public class Miner_coalitionQAZ123 implements Miner {
     BlockChain[] blocks;
     int roundsLeft;
     int miningIndex;
+    boolean mining_now = false;
     boolean cheat_now = false;
 
     private static final double SIGNAL_SPEND = 0.000445;
@@ -83,9 +84,10 @@ public class Miner_coalitionQAZ123 implements Miner {
         BlockChain highestBlock = getLongestChain();
 
         if (roundsLeft == 2 && !isSignalSent(highestBlock)) {
+            mining_now = true;
             return SIGNAL_SPEND;
         } else if (isSignalSent(highestBlock)) {
-            return highestBlock.getStakeForMiner(miningIndex) * 0.35;
+            return highestBlock.getStakeForMiner(miningIndex) * 0.4;
         } else {
             return 0.0;
         }
